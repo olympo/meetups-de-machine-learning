@@ -1,0 +1,17 @@
+Here are some references for further reading. First, general neural network stuff:
+
+-deeplearning.net and the tutorials at http://deeplearning.net/tutorial/
+-geoff hinton's neural network coursera -- https://www.coursera.org/course/neuralnets
+-pretty much any papers authored by Geoffrey Hinton, Yann LeCun, Yoshua Bengio, or Andrew Ng.
+  there are other brilliant researchers in this field, but these guys are the most prolific.
+-theano -- the best general purpose machine learning library ever -- http://deeplearning.net/software/theano/
+
+How the above applies to NLP:
+
+-all the papers at https://code.google.com/p/word2vec/
+-quoc le's paragraph vector, which uses the word2vec idea
+  to produce distributed representations of documents -- http://arxiv.org/abs/1405.4053
+-collobert and weston's paper on using convnets for nlp -- http://ronan.collobert.com/pub/matos/2008_nlp_icml.pdf
+-richard socher's work is interesting as well, but i think mikolov, le, collobert, and weston's work
+  has surpassed or will soon surpass it. definitely check socher's work out if you want to see
+  how to generalize a recurrent neural network from a linked list to a tree. pretty interesting stuff!
