@@ -1,0 +1,102 @@
+
+MeetUp - Machine Learning
+================================
+
+Material utilizado no MeetUp Machine Learning de 2015-08-13
+Tema: Modelos regressivos e series temporais
+
+1. ORIGEM DOS DADOS
+-------------------
+Para os dados do PIB, o Itau publica uma serie mensal, que utilizaremos em nosso exercicio.
+=> https://www.itau.com.br/itaubba-pt/analises-economicas/nossas-series-economicas/planilhas/pib-mensal-itau-unibanco
+
+No site da ABCR (Associacao Brasileira de Concessionarias de Rodovias) esta disponivel para download os dados de trafego nos rodovias pedagiadas do Brasil. Os dados sao computados a partir da quantidade de veiculos que passa a cada dia em cada praca de pedagio, de acordo com a categoria (automovel, caminhao, etc) que e o fator determinante do preco da tarifa. E de se esperar que o somatario de todas as pracas de pedagio possa variar ao longo do tempo devido tambem a concessao de novas rodovias - algo para se ter atencao no momento da extracao e analise exploratoria de dados. Neste estudo, utilizaremos o indice ABCR que ja esta levando em consideracao estas caracteristicas.
+=> http://www.abcr.org.br/Download.ashx?arquivo=IndiceABCR.xls
+
+```{r}
+d<-read.csv("dsPIB.csv")
+head(d)
+```
+
+2. Analise exploratoria - a relacao entre PIB e Trafego
+-------------------
+```{r}
+pairs(~ PIB + BR.PESADOS + BR.LEVES + SP.LEVES + SP.PESADOS, data = d)
+plot(d$PIB)
+lines(d$PIB)
+```
+
+3.1 Modelo de regressao linear: PIB explicado pelo trafego pesado
+-------------------
+```{r}
+summary(lm(PIB~BR.PESADOS, data=d))
+```
+
+3.2 Modelo de regressao linear: PIB explicado pelo trafego leves
+-------------------
+```{r}
+summary(lm(PIB~BR.LEVES, data=d))
+```
+
+3.3 Modelo de regressao linear: PIB explicado pelo trafego leves + sazonalidade mensal
+-------------------
+```{r}
+summary(lm(PIB~BR.LEVES + D1, data=d))
+```
+
+4.1 Modelo autoregressivo: ordem 1
+-------------------
+```{r}
+d2 <- cbind(d[5:60,]$PIB,
+             d[4:59,]$PIB) 
+colnames(d2)<-c("PIB", "PIB-1")
+d2<-as.data.frame(d2)
+summary(lm(PIB~., data=d2))
+```
+
+4.2 Modelo autoregressivo: ordem 2
+-------------------
+```{r}
+d2 <- cbind(d[5:60,]$PIB,
+             d[4:59,]$PIB,
+             d[3:58,]$PIB) 
+colnames(d2)<-c("PIB", "PIB-1", "PIB-2")
+d2<-as.data.frame(d2)
+summary(lm(PIB~., data=d2))
+```
+
+4.3 Modelo autoregressivo: ordem 3
+-------------------
+```{r}
+d2 <- cbind(d[5:60,]$PIB,
+             d[4:59,]$PIB,
+             d[3:58,]$PIB,
+             d[2:57,]$PIB) 
+colnames(d2)<-c("PIB", "PIB-1", "PIB-2","PIB-3")
+d2<-as.data.frame(d2)
+summary(lm(PIB~., data=d2))
+```
+
+4.4 Modelo autoregressivo: ordem 4
+-------------------
+```{r}
+d2 <- cbind(d[5:60,]$PIB,
+             d[4:59,]$PIB,
+             d[3:58,]$PIB,
+             d[2:57,]$PIB,
+             d[1:56,]$PIB) 
+colnames(d2)<-c("PIB", "PIB-1", "PIB-2", "PIB-3", "PIB-4")
+d2<-as.data.frame(d2)
+summary(lm(PIB~., data=d2))
+```
+
+4.5 Modelo autoregressivo: ordem com sazonalidade m-12
+-------------------
+```{r}
+d2 <- cbind(d[13:60,]$PIB,
+             d[12:59,]$PIB,
+             d[1:48,]$PIB) 
+colnames(d2)<-c("PIB", "PIB-1", "PIB-12")
+d2<-as.data.frame(d2)
+summary(lm(PIB~., data=d2))
+```
